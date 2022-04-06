@@ -27,18 +27,16 @@ describe("Mint one token and observer tokenURI", function () {
     const ipfsnft = await IpfsNft.deploy();
     await ipfsnft.deployed();
 
-    console.log("owner is " + owner.address);
+    await ipfsnft.mint(owner.address); // 1
+    await ipfsnft.mint(owner.address); // 2
+    await ipfsnft.mint(owner.address); // 3
 
-    console.log("about() = " + await ipfsnft.about());
+    const myTokenURI1 = await ipfsnft.tokenURI(1);
+    const myTokenURI2 = await ipfsnft.tokenURI(2);
+    const myTokenURI3 = await ipfsnft.tokenURI(3);
 
-    //console.log("_balances = " + ipfsnft);
-
-    const counter = await ipfsnft.mint(owner.address);
-
-    console.log("counter = " + counter);
-
-    const myTokenURI = await ipfsnft.tokenURI(1);
-
-    console.log("token x = " + myTokenURI);
+    expect(myTokenURI1).to.equal("ipfs://QmYTYtBcehRdhiZuCQxyEBpoxZPV2yqyWLpVaXLQUH4BmH/1.mp4");
+    expect(myTokenURI2).to.equal("ipfs://QmYTYtBcehRdhiZuCQxyEBpoxZPV2yqyWLpVaXLQUH4BmH/2.mp4");
+    expect(myTokenURI3).to.equal("ipfs://QmYTYtBcehRdhiZuCQxyEBpoxZPV2yqyWLpVaXLQUH4BmH/3.mp4");
   });
 });

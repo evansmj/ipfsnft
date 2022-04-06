@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract IpfsNft is ERC721 {
     using Counters for Counters.Counter;
@@ -18,9 +18,14 @@ contract IpfsNft is ERC721 {
      * by default, can be overridden in child contracts.
      */
     function _baseURI() internal pure override returns (string memory) {
-        //use base uri for myurl.com/token/1, myurl.com/token/2
-        //returns _baseURI() + _tokenId;
-        return "ipfs://QmQqyjQkYPsqEs3pz9uQJPVbzwZ6Ze3QFUhuqHtjNQQBUh/";
+        return "ipfs://QmYTYtBcehRdhiZuCQxyEBpoxZPV2yqyWLpVaXLQUH4BmH/";
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, Strings.toString(tokenId), ".mp4")) : "";
     }
 
     function about() public pure returns (string memory) {
@@ -28,10 +33,8 @@ contract IpfsNft is ERC721 {
     }
 
     function mint(address to) public returns (uint256) {
-        console.log("start mint()");
         _tokenIdCounter.increment();
         _safeMint(to, _tokenIdCounter.current());
-        console.log("after safeMint()");
         return _tokenIdCounter.current();
     }
 
